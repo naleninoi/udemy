@@ -8,9 +8,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'udemy';
 
-  public pageToShow: string = 'recipes';
+  loadedFeature: string = 'recipe';
 
-  onNavigate(link: string) {
-    this.pageToShow = link;
+  onNavigate(feature: string) {
+    this.loadedFeature = feature;
   }
 }

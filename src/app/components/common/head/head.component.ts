@@ -12,13 +12,16 @@ export class HeadComponent implements OnInit {
 
   collapsed = true;
 
+  @Output()
+  featureSelected = new EventEmitter<string>();
+
   constructor() { }
 
   ngOnInit(): void {
   }
 
-  onLinkClicked(linkName: string) {
-    this.linkWasClicked.emit(linkName);
+  onSelect(feature: string) {
+    this.featureSelected.emit(feature);
   }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-head',
@@ -7,11 +7,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeadComponent implements OnInit {
 
+  @Output()
+  linkWasClicked = new EventEmitter<string>();
+
   collapsed = true;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onLinkClicked(linkName: string) {
+    this.linkWasClicked.emit(linkName);
   }
 
 }

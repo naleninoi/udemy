@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'udemy';
+
+  public pageToShow: string = 'recipes';
+
+  onNavigate(link: string) {
+    this.pageToShow = link;
+  }
 }

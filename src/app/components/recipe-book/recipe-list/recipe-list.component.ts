@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { RecipeService } from 'src/app/shared/services/recipe.service';
 import { Recipe } from '../../../models/recipe.model';
 
 @Component({
@@ -8,25 +9,15 @@ import { Recipe } from '../../../models/recipe.model';
 })
 export class RecipeListComponent implements OnInit {
 
-  @Output()
-  recipeWasSelected = new EventEmitter<Recipe>();
+  recipes: Recipe[];
 
-  recipes: Recipe[] = [
-    new Recipe('A Test Recipe',
-    'This is simply a test',
-    'https://images.themodernproper.com/billowy-turkey/production/posts/2020/Instant-Pot-Chicken-Marinara-with-Polenta-12.jpg?w=667&auto=compress%2Cformat&fit=crop&fp-x=0.5&fp-y=0.5&dm=1611333160&s=771ac3777717eab4d982cf4b1adbfd61'),
-    new Recipe('The Best Dish Ever',
-    'Try to look before your cook',
-    'https://images.themodernproper.com/billowy-turkey/production/posts/2020/Broccoli-Pesto-Pasta-7.jpg?w=1200&auto=compress%2Cformat&fit=crop&fp-x=0.5&fp-y=0.5&dm=1599768462&s=639a0f7352bd6cccc3d5c90098a546de')
-  ];
-
-  constructor() { }
+  constructor(
+    private recipeService: RecipeService,
+  ) { }
 
   ngOnInit(): void {
+    this.recipes = this.recipeService.recipes;
   }
 
-  onRecipeSelected(recipe: Recipe) {
-    this.recipeWasSelected.emit(recipe);
-  }
 
 }

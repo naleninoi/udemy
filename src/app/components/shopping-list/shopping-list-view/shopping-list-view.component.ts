@@ -17,10 +17,14 @@ export class ShoppingListViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.ingredients = this.shoppingListService.ingredients;
-    this.shoppingListService.newIngredientAdded
+    this.shoppingListService.ingredientsChanged
       .subscribe(
         () => this.ingredients = this.shoppingListService.ingredients
       )
+  }
+
+  onEditItem(index: number) {
+    this.shoppingListService.startedEditing.next(index);
   }
 
 }

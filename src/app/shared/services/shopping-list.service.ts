@@ -5,7 +5,7 @@ import { EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ShoppingListService {
 

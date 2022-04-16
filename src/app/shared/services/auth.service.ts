@@ -1,8 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { AuthResponseData } from 'src/app/models/auth-response.model';
+import { User } from 'src/app/models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,8 @@ export class AuthService {
 
   SIGNIN_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + this.API_KEY;
 
+  user = new Subject<User>();
+
   constructor(
     private http: HttpClient
   ) { }
@@ -26,7 +29,14 @@ export class AuthService {
       returnSecureToken: true
     };
     return this.http.post<AuthResponseData>(this.SIGNUP_URL, requestPayload)
-    .pipe(catchError(this.handleError));
+    .pipe(
+      catchError(this.handleError),
+      tap(resData => {
+        const expirationDate = new Date(new Date().getTime() + +resData.expiresIn * 1000);
+        const newUser = new User(resData.email, resData.localId, resData.idToken, expirationDate);
+        this.user.next(newUser);
+        console.log(newUser);
+      }));
   }
 
   login(email: string, password: string) {
@@ -36,7 +46,18 @@ export class AuthService {
       returnSecureToken: true
     };
     return this.http.post<AuthResponseData>(this.SIGNIN_URL, requestPayload)
-    .pipe(catchError(this.handleError));
+    .pipe(
+      catchError(this.handleError),
+      tap(resData => {
+        this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn)
+      }));
+  }
+
+  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+    const newUser = new User(email, userId, token, expirationDate);
+    this.user.next(newUser);
+    console.log(newUser);
   }
 
   private handleError(errorResponse: HttpErrorResponse) {
